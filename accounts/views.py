@@ -37,7 +37,7 @@ def register(request):
 
             login(request, user)
             messages.success(request, "Welcome! Your account was created.")
-            return redirect("route_after_login")
+            return redirect("accounts:route_after_login")
     else:
         form = CustomUserCreationForm()
     return render(request, "registration/register.html", {"form": form})
