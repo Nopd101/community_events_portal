@@ -1,0 +1,56 @@
+{% extends "events/dashboard_base.html" %}
+
+{% block sidebar %}
+  <h6 class="text-uppercase text-white-50 mb-3">Organizer</h6>
+  <ul class="nav flex-column gap-2">
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:organizer_dashboard' %}">
+        Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:organizer_events' %}">
+        My events
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:event_create' %}">
+        Create event
+      </a>
+    </li>
+    <li class="nav-item mt-3">
+      <span class="text-white-50 small">Profile</span>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:organizer_profile' %}">
+        Edit profile
+      </a>
+    </li>
+  </ul>
+{% endblock %}
+
+{% block main_content %}
+  <h5>Feedback for: {{ event.title }}</h5>
+  <p class="text-muted">Average: ⭐ {{ avg|default:"-" }}/5</p>
+
+  {% if feedbacks %}
+    <div class="list-group">
+      {% for f in feedbacks %}
+        <div class="list-group-item">
+          <div>
+            <strong>{{ f.user.get_full_name|default:f.user.username }}</strong>
+            • ⭐ {{ f.rating }}/5
+          </div>
+          {% if f.comment %}
+            <div class="mt-1">{{ f.comment }}</div>
+          {% endif %}
+          <div class="small text-muted mt-1">
+            {{ f.created_at|date:"M d, Y H:i" }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">No feedback yet.</div>
+  {% endif %}
+{% endblock %}

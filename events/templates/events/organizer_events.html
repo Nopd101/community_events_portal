@@ -1,0 +1,92 @@
+{% extends "events/dashboard_base.html" %}
+
+{% block sidebar %}
+  <h6 class="text-uppercase text-white-50 mb-3">Organizer</h6>
+  <ul class="nav flex-column gap-2">
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:organizer_dashboard' %}">
+        Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:organizer_events' %}">
+        My events
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:event_create' %}">
+        Create event
+      </a>
+    </li>
+    <li class="nav-item mt-3">
+      <span class="text-white-50 small">Profile</span>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:organizer_profile' %}">
+        Edit profile
+      </a>
+    </li>
+  </ul>
+{% endblock %}
+
+{% block main_content %}
+    <form method="get" action="." class="row g-2 mb-3">
+    <div class="col-sm-3">
+      <select name="status" class="form-select">
+        <option value="">All statuses</option>
+        <option value="pending"  {% if status == 'pending' %}selected{% endif %}>Pending</option>
+        <option value="approved" {% if status == 'approved' %}selected{% endif %}>Approved</option>
+        <option value="declined" {% if status == 'declined' %}selected{% endif %}>Declined</option>
+        <option value="full"     {% if status == 'full' %}selected{% endif %}>Full</option>
+      </select>
+    </div>
+    <div class="col-sm-4">
+      <input type="text"
+             name="q"
+             class="form-control"
+             placeholder="Search by title…"
+             value="{{ q }}">
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-primary">Filter</button>
+    </div>
+    <div class="col-auto">
+      <a href="{% url 'events:event_create' %}" class="btn btn-success">Create Event</a>
+    </div>
+  </form>
+
+  {% if my_events %}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead><tr><th>Title</th><th>Date</th><th>Status</th><th>Rating</th><th class="text-end">Actions</th></tr></thead>
+        <tbody>
+          {% for e in my_events %}
+            <tr>
+              <td>{{ e.title }}</td>
+              <td>{{ e.date|date:"M d, Y" }}</td>
+              <td><span class="badge bg-secondary text-uppercase">{{ e.status }}</span></td>
+              <td>⭐ {{ e.avg_rating|default:"-" }}/5 ({{ e.fb_count|default:0 }})</td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-info"
+                  href="{% url 'events:event_detail' e.id %}">
+                  Details
+                </a>
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'events:organizer_event_feedback' e.id %}">View Feedback</a>
+                {% if e.status != "approved" and e.status != "full" %}
+                  <a class="btn btn-sm btn-outline-primary" href="{% url 'events:event_update' e.id %}">Edit</a>
+                  <form class="d-inline" method="post" action="{% url 'events:event_delete' e.id %}">{% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                  </form>
+                {% else %}
+                  <span class="text-muted small">Locked</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info">You haven’t created any events yet.</div>
+  {% endif %}
+{% endblock %}

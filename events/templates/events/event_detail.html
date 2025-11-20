@@ -1,0 +1,74 @@
+{% block sidebar %}
+  <h6 class="text-uppercase text-white-50 mb-3">Organizer</h6>
+  <ul class="nav flex-column gap-2">
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:organizer_dashboard' %}">
+        Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:organizer_events' %}">
+        My events
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:event_create' %}">
+        Create event
+      </a>
+    </li>
+    <li class="nav-item mt-3">
+      <span class="text-white-50 small">Profile</span>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:organizer_profile' %}">
+        Edit profile
+      </a>
+    </li>
+  </ul>
+{% endblock %}
+
+{% block main_content %}
+  <h4 class="mb-1">{{ event.title }}</h4>
+  <div class="text-muted small mb-2">
+    {{ event.date|date:"M d, Y" }} • {{ event.location }}
+  </div>
+
+  <p class="mb-3">{{ event.short_description }}</p>
+
+  {# Attendee actions: Join / Give feedback #}
+  {% if request.user.profile.role == 'attendee' %}
+    <div class="d-flex gap-2 mb-3">
+      {% if joined %}
+        <a class="btn btn-primary btn-sm"
+           href="{% url 'events:feedback_create' event.id %}">
+          Give Feedback
+        </a>
+      {% else %}
+        <a class="btn btn-outline-secondary btn-sm"
+           href="{% url 'events:attendee_join_event' event.id %}">
+          Join Event
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if request.user.is_superuser or request.user.profile.role == 'organizer' %}
+    <hr>
+    <h5 class="mt-3">Participants ({{ participants|length }})</h5>
+
+    {% if participants %}
+      <ul class="list-group">
+        {% for p in participants %}
+          <li class="list-group-item py-1">
+            {{ p.user.get_full_name|default:p.user.username }}
+            <span class="text-muted small">
+              – joined {{ p.joined_at|date:"M d, Y H:i" }}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-muted mt-2">No participants yet.</p>
+    {% endif %}
+  {% endif %}
+{% endblock %}

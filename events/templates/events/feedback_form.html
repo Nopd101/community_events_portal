@@ -1,0 +1,43 @@
+{% extends "events/dashboard_base.html" %}
+
+{% block sidebar %}
+  <h6 class="text-uppercase text-white-50 mb-3">Attendee</h6>
+  <ul class="nav flex-column gap-2">
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:attendee_events' %}">
+        All events
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:attendee_my_events' %}">
+        My registered events
+      </a>
+    </li>
+    <li class="nav-item mt-3">
+      <span class="text-white-50 small">Profile</span>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white p-0" href="{% url 'events:attendee_profile' %}">
+        Edit profile
+      </a>
+    </li>
+  </ul>
+{% endblock %}
+
+{% block main_content %}
+  <h5>Feedback for: {{ event.title }}</h5>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {% for err in form.non_field_errors %}{{ err }}<br>{% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button class="btn btn-primary">Submit</button>
+    <a href="{% url 'events:attendee_events' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

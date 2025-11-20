@@ -1,0 +1,99 @@
+{% extends "events/dashboard_base.html" %} {% block sidebar %}
+<h6 class="text-uppercase text-white-50 mb-3">Attendee</h6>
+<ul class="nav flex-column gap-2">
+  <li class="nav-item">
+    <a
+      class="nav-link text-white p-0"
+      href="{% url 'events:attendee_events' %}"
+    >
+      All events
+    </a>
+  </li>
+  <li class="nav-item">
+    <a
+      class="nav-link text-white p-0"
+      href="{% url 'events:attendee_my_events' %}"
+    >
+      My registered events
+    </a>
+  </li>
+  <li class="nav-item mt-3">
+    <span class="text-white-50 small">Profile</span>
+  </li>
+  <li class="nav-item">
+    <a
+      class="nav-link text-white p-0"
+      href="{% url 'events:attendee_profile' %}"
+    >
+      Edit profile
+    </a>
+  </li>
+</ul>
+{% endblock %} {% block main_content %}
+<form method="get" action="." class="row g-2 mb-3">
+  <div class="row g-3 mb-3">
+    <div class="col-md-3">
+      <div class="card p-3">
+        <div class="small text-muted">Events I joined</div>
+        <div class="h4 mb-0">{{ total_joined }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card p-3">
+        <div class="small text-muted">Upcoming joined</div>
+        <div class="h4 mb-0">{{ upcoming_joined }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm">
+    <input
+      name="q"
+      class="form-control"
+      placeholder="Search events…"
+      value="{{ q }}"
+    />
+  </div>
+  <div class="col-auto"><button class="btn btn-primary">Search</button></div>
+</form>
+
+{% if events %}
+<div class="list-group">
+  {% for e in events %}
+  <div class="list-group-item">
+    <div class="d-flex justify-content-between">
+      <strong>{{ e.title }}</strong>
+      <small class="text-muted">{{ e.date|date:"M d, Y" }}</small>
+    </div>
+    <div class="small text-muted">{{ e.location }}</div>
+    <div class="small mt-1">
+      ⭐ {{ e.avg_rating|default:"-" }}/5 ({{ e.fb_count|default:0 }} reviews)
+    </div>
+
+    <div class="mt-2 d-flex gap-2">
+      <a
+        class="btn btn-sm btn-outline-info"
+        href="{% url 'events:event_detail' e.id %}"
+      >
+        Details
+      </a>
+
+      {% if e.id in joined_ids %}
+      <a
+        class="btn btn-sm btn-outline-primary"
+        href="{% url 'events:feedback_create' e.id %}"
+        >Give Feedback</a
+      >
+      {% else %}
+      <a
+        class="btn btn-sm btn-outline-secondary"
+        href="{% url 'events:attendee_join_event' e.id %}"
+        >Join</a
+      >
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">No events found.</div>
+{% endif %} {% endblock %}
