@@ -40,11 +40,8 @@
     <div class="event-row-cards mb-3">
       {% for e in submissions %}
         <div class="event-row-card panel-card p-3">
-          {% if e.image %}
-              <img src="{{ e.image.url }}" alt="Event image">
-          {% else %}
-              <span class="text-muted small">No image</span>
-          {% endif %}
+          <img src="{{ e.image.url }}"
+                         style="width: 150px; height: 150px; object-fit: cover; border-radius: 5px;">
           <div class="event-card-content mb-3">
             <div class="fw-semibold">{{ e.title }}</div>
             <div class="text-muted small mb-2">
