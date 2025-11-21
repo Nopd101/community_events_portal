@@ -1,25 +1,29 @@
 {% extends "events/dashboard_base.html" %}
 
 {% block sidebar %}
-  <h6 class="text-uppercase text-white-50 mb-3">Admin</h6>
-  <ul class="nav flex-column gap-2">
+  <h6 class="text-uppercase mb-3 dashboard-sidebar-title text-dark">Admin</h6>
+  <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_dashboard' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'events:admin_dashboard' %}">
+        <i class="bi bi-house-door"></i>
         Dashboard
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_review' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_review' %}active{% endif %}" href="{% url 'events:admin_review' %}">
+        <i class="bi bi-ui-checks-grid"></i>
         Review submissions
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_feedback_overview' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_feedback_overview' %}active{% endif %}" href="{% url 'events:admin_feedback_overview' %}">
+        <i class="bi bi-calendar-event"></i>
         All events
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_user_management' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_user_management' %}active{% endif %}" href="{% url 'events:admin_user_management' %}">
+        <i class="bi bi-people"></i>
         User management
       </a>
     </li>
@@ -27,32 +31,46 @@
 {% endblock %}
 
 {% block main_content %}
-  <h5 class="mb-3">Pending Event Submissions</h5>
+  <div class="dashboard-banner mb-4">
+    <h5 class="fw-bold fs-3 text-white mb-1">Pending Event Submissions</h5>
+    <p class="text-white-50 small mb-0">Review and approve or decline new event requests.</p>
+  </div>
 
-  {% if submissions %}
-    <div class="list-group">
+ {% if submissions %}
+    <div class="event-row-cards mb-3">
       {% for e in submissions %}
-        <div class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <strong>{{ e.title }}</strong>
-            <div class="small text-muted">
+        <div class="event-row-card panel-card p-3">
+
+          <div class="event-card-content mb-3">
+            <div class="fw-semibold">{{ e.title }}</div>
+            <div class="text-muted small mb-2">
               By {{ e.organizer.get_full_name|default:e.organizer.username }} • {{ e.date|date:"M d, Y" }}
             </div>
+            {% if e.location %}
+              <div class="small mb-1">
+                <i class="bi bi-geo-alt me-1"></i>{{ e.location }}
+              </div>
+            {% endif %}
           </div>
-          <div class="d-flex gap-2">
-            <form method="post" action="{% url 'events:admin_approve' e.pk %}">
-              {% csrf_token %}
-              <button class="btn btn-sm btn-success">Approve</button>
-            </form>
-            <form method="post" action="{% url 'events:admin_decline' e.pk %}">
-              {% csrf_token %}
-              <button class="btn btn-sm btn-danger">Decline</button>
-            </form>
+
+          <div class="d-flex justify-content-between align-items-center mt-auto pending-card-actions">
+            <span class="badge bg-warning-subtle text-warning-emphasis pending-badge">Pending</span>
+            <div class="d-flex gap-2">
+              <form method="post" action="{% url 'events:admin_approve' e.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-success btn-pill">Approve</button>
+              </form>
+              <form method="post" action="{% url 'events:admin_decline' e.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-danger btn-pill">Decline</button>
+              </form>
+            </div>
           </div>
+
         </div>
       {% endfor %}
     </div>
   {% else %}
-    <div class="alert alert-info">No pending submissions.</div>
+    <div class="alert alert-info panel-card border-0 shadow-sm">No pending submissions.</div>
   {% endif %}
 {% endblock %}

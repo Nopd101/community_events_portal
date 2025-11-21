@@ -1,25 +1,29 @@
 {% extends "events/dashboard_base.html" %}
 
 {% block sidebar %}
-  <h6 class="text-uppercase text-white-50 mb-3">Admin</h6>
-  <ul class="nav flex-column gap-2">
+  <h6 class="text-uppercase mb-3 dashboard-sidebar-title text-dark">Admin</h6>
+  <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_dashboard' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'events:admin_dashboard' %}">
+        <i class="bi bi-house-door"></i>
         Dashboard
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_review' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_review' %}active{% endif %}" href="{% url 'events:admin_review' %}">
+        <i class="bi bi-ui-checks-grid"></i>
         Review submissions
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_feedback_overview' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_feedback_overview' %}active{% endif %}" href="{% url 'events:admin_feedback_overview' %}">
+        <i class="bi bi-calendar-event"></i>
         All events
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_user_management' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_user_management' %}active{% endif %}" href="{% url 'events:admin_user_management' %}">
+        <i class="bi bi-people"></i>
         User management
       </a>
     </li>
@@ -27,56 +31,64 @@
 {% endblock %}
 
 {% block main_content %}
-  <h5 class="mb-3">All Events</h5>
-
-  <form method="get" action="." class="row g-2 mb-3">
-    <div class="col-sm-4">
-      <input type="text"
-             name="q"
-             class="form-control"
-             placeholder="Search by title or organizer…"
-             value="{{ q }}">
-    </div>
-    <div class="col-sm-3">
-      <select name="status" class="form-select">
-        <option value="">All statuses</option>
-        <option value="pending"  {% if status == "pending" %}selected{% endif %}>Pending</option>
-        <option value="approved" {% if status == "approved" %}selected{% endif %}>Approved</option>
-        <option value="declined" {% if status == "declined" %}selected{% endif %}>Declined</option>
-        <option value="full"     {% if status == "full" %}selected{% endif %}>Full</option>
-      </select>
-    </div>
-    <div class="col-auto">
-      <button class="btn btn-primary">Filter</button>
-    </div>
-  </form>
-
+  <div class="dashboard-banner mb-4">
+      <h5 class="fw-bold fs-3 text-white">All Events</h5>
+  </div>
+  <div class="card panel-card mb-3 p-3">
+    <form method="get" action="." class="d-flex row g-2 align-items-end">
+      <div class="col-sm-8">
+        <input type="text"
+              name="q"
+              class="form-control"
+              placeholder="Search by title or organizer…"
+              value="{{ q }}">
+      </div>
+      <div class="col-sm-3">
+        <select name="status" class="form-select">
+          <option value="">All statuses</option>
+          <option value="pending"  {% if status == "pending" %}selected{% endif %}>Pending</option>
+          <option value="approved" {% if status == "approved" %}selected{% endif %}>Approved</option>
+          <option value="declined" {% if status == "declined" %}selected{% endif %}>Declined</option>
+          <option value="full"     {% if status == "full" %}selected{% endif %}>Full</option>
+        </select>
+      </div>
+      <div class="col-auto">
+         <button class="btn btn-primary bg-grad">
+          <i class="bi bi-funnel me-1"></i> Filter 
+        </button>
+      </div>
+    </form>
+  </div>
   {% if events %}
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Date</th>
-            <th>Organizer</th>
-            <th>Avg Rating</th>
-            <th>Reviews</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for e in events %}
-            <tr>
-              <td>{{ e.title }}</td>
-              <td>{{ e.date|date:"M d, Y" }}</td>
-              <td>{{ e.organizer.get_full_name|default:e.organizer.username }}</td>
-              <td>⭐ {{ e.avg_rating|default:"-" }}/5</td>
-              <td>{{ e.fb_count|default:0 }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+  <div class="mb-3">
+    <div class="event-row-cards">
+      {% for e in events %}
+      <div class="event-row-card panel-card p-3">
+
+        <div class="event-card-content">
+          <div class="fw-semibold">{{ e.title }}</div>
+          <div class="text-muted small mb-2">{{ e.date|date:"M d, Y" }}</div>
+
+          <div class="small mb-1">
+            <strong>Organizer:</strong> 
+            {{ e.organizer.get_full_name|default:e.organizer.username }}
+          </div>
+
+          <div class="small mb-1">
+            ⭐ {{ e.avg_rating|default:"-" }}/5
+          </div>
+
+          <div class="small">
+            {{ e.fb_count|default:0 }} reviews
+          </div>
+        </div>
+
+      </div>
+      {% endfor %}
     </div>
-  {% else %}
-    <div class="alert alert-info">No events available.</div>
-  {% endif %}
+  </div>
+{% else %}
+  <div class="alert alert-info">No events available.</div>
+{% endif %}
+
 {% endblock %}

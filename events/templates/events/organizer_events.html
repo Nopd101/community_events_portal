@@ -1,28 +1,28 @@
 {% extends "events/dashboard_base.html" %}
 
 {% block sidebar %}
-  <h6 class="text-uppercase text-white-50 mb-3">Organizer</h6>
-  <ul class="nav flex-column gap-2">
+  <h6 class="text-uppercase mb-3 dashboard-sidebar-title text-dark">Organizer</h6>
+  <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:organizer_dashboard' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_dashboard' %}active{% endif %}" href="{% url 'events:organizer_dashboard' %}">
         Dashboard
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:organizer_events' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_events' %}active{% endif %}" href="{% url 'events:organizer_events' %}">
         My events
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:event_create' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'event_create' %}active{% endif %}" href="{% url 'events:event_create' %}">
         Create event
       </a>
     </li>
     <li class="nav-item mt-3">
-      <span class="text-white-50 small">Profile</span>
+      <span class="nav-link text-dark p-0 ">Profile</span>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:organizer_profile' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_profile' %}active{% endif %}" href="{% url 'events:organizer_profile' %}">
         Edit profile
       </a>
     </li>
@@ -30,124 +30,142 @@
 {% endblock %}
 
 {% block main_content %}
-  <form method="get" action="." class="row g-2 mb-3">
-    <div class="col-sm-3">
-      <select name="status" class="form-select">
-        <option value="">All statuses</option>
-        <option value="pending"  {% if status == 'pending' %}selected{% endif %}>Pending</option>
-        <option value="approved" {% if status == 'approved' %}selected{% endif %}>Approved</option>
-        <option value="declined" {% if status == 'declined' %}selected{% endif %}>Declined</option>
-        <option value="full"     {% if status == 'full' %}selected{% endif %}>Full</option>
-      </select>
-    </div>
+ <div class="dashboard-banner mb-4">
+    <h5 class="fw-bold fs-3 text-white mb-1">My Events</h5>
+    <p class="text-white-50 small mb-0">
+      Manage, filter, and track all events you’ve created.
+    </p>
+  </div>
+  <div class="card panel-card mb-3 p-3">
+    <form method="get" action="." class="row g-2">
+      <div class="col-sm-2">
+        <select name="status" class="form-select">
+          <option value="">All statuses</option>
+          <option value="pending"  {% if status == 'pending' %}selected{% endif %}>Pending</option>
+          <option value="approved" {% if status == 'approved' %}selected{% endif %}>Approved</option>
+          <option value="declined" {% if status == 'declined' %}selected{% endif %}>Declined</option>
+          <option value="full"     {% if status == 'full' %}selected{% endif %}>Full</option>
+        </select>
+      </div>
 
-    <!-- Date from -->
-    <div class="col-sm-3">
-      <input
-        type="date"
-        name="date_from"
-        class="form-control"
-        placeholder="From date"
-        value="{{ date_from|default_if_none:'' }}"
-      >
-    </div>
+      <div class="col-sm-2">
+        <input
+          type="date"
+          name="date_from"
+          class="form-control"
+          placeholder="From date"
+          value="{{ date_from|default_if_none:'' }}"
+        >
+      </div>
 
-    <!-- Date to -->
-    <div class="col-sm-3">
-      <input
-        type="date"
-        name="date_to"
-        class="form-control"
-        placeholder="To date"
-        value="{{ date_to|default_if_none:'' }}"
-      >
-    </div>
+      <div class="col-sm-2">
+        <input
+          type="date"
+          name="date_to"
+          class="form-control"
+          placeholder="To date"
+          value="{{ date_to|default_if_none:'' }}"
+        >
+      </div>
 
-    <div class="col-sm-3">
-      <input
-        type="text"
-        name="q"
-        class="form-control"
-        placeholder="Search by title…"
-        value="{{ q }}"
-      >
-    </div>
+      <div class="col-sm-3">
+        <input
+          type="text"
+          name="q"
+          class="form-control"
+          placeholder="Search by title…"
+          value="{{ q }}"
+        >
+      </div>
 
-    <div class="col-auto">
-      <button class="btn btn-primary">Filter</button>
-    </div>
-    <div class="col-auto">
-      <a href="{% url 'events:event_create' %}" class="btn btn-success">Create Event</a>
-    </div>
-  </form>
+      <div class="col-auto">
+        <button class="btn btn-primary mt-3 mt-sm-0">
+          <i class="bi bi-funnel me-1"></i>
+          Filter</button>
+      </div>
+      <div class="col-auto">
+        <a href="{% url 'events:event_create' %}" class="btn border-grad btn-success">Create Event</a>
+      </div>
+    </form>
+  </div>
 
   {% if my_events %}
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th style="width:80px;">Image</th>
-            <th>Title</th>
-            <th>Date</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Capacity</th>
-            <th>Status</th>
-            <th>Rating</th>
-            <th class="text-end">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for e in my_events %}
+    <div class="table-card-wrapper panel-card p-3 mb-3">
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
             <tr>
-              <td>
-                {% if e.image %}
-                  <img src="{{ e.image.url }}"
-                       style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
-                {% else %}
-                  <span class="text-muted small">No image</span>
-                {% endif %}
-              </td>
-              <td>{{ e.title }}</td>
-              <td>{{ e.date|date:"M d, Y" }}</td>
-              <td>{{ e.start_time|time:"H:i" }}</td>
-              <td>{{ e.end_time|time:"H:i" }}</td>
-              <td>
-                {% if e.capacity %}
-                  {{ e.participants.count }}/{{ e.capacity.max_participants }}
-                {% else %}
-                  {{ e.participants.count }} / -
-                {% endif %}
-              </td>
-              <td><span class="badge bg-secondary text-uppercase">{{ e.status }}</span></td>
-              <td>⭐ {{ e.avg_rating|default:"-" }}/5 ({{ e.fb_count|default:0 }})</td>
-              <td class="text-end">
-                <a class="btn btn-sm btn-outline-info"
-                   href="{% url 'events:event_detail' e.id %}">
-                  Details
-                </a>
-                <a class="btn btn-sm btn-outline-secondary"
-                   href="{% url 'events:organizer_event_feedback' e.id %}">
-                  View Feedback
-                </a>
-                {% if e.status != "approved" and e.status != "full" %}
-                  <a class="btn btn-sm btn-outline-primary"
-                     href="{% url 'events:event_update' e.id %}">
-                    Edit
-                  </a>
-                  <form class="d-inline" method="post"
-                        action="{% url 'events:event_delete' e.id %}">
-                    {% csrf_token %}
-                    <button class="btn btn-sm btn-outline-danger">Delete</button>
-                  </form>
-                {% else %}
-                  <span class="text-muted small">Locked</span>
-                {% endif %}
-              </td>
+              <th style="width:80px;">Image</th>
+              <th>Title</th>
+              <th>Date</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Capacity</th>
+              <th>Status</th>
+              <th>Rating</th>
+              <th class="text-end">Actions</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {% for e in my_events %}
+              <tr>
+                <td>
+                  {% if e.image %}
+                    <img src="{{ e.image.url }}"
+                         style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+                  {% else %}
+                    <span class="text-muted small">No image</span>
+                  {% endif %}
+                </td>
+                <td>{{ e.title }}</td>
+                <td>{{ e.date|date:"M d, Y" }}</td>
+                <td>{{ e.start_time|time:"H:i" }}</td>
+                <td>{{ e.end_time|time:"H:i" }}</td>
+                <td>
+                  {% if e.capacity %}
+                    {{ e.participants.count }}/{{ e.capacity.max_participants }}
+                  {% else %}
+                    {{ e.participants.count }} / -
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="badge bg-secondary text-uppercase">
+                    {{ e.status }}
+                  </span>
+                </td>
+                <td>
+                  ⭐ {{ e.avg_rating|default:"-" }}/5 ({{ e.fb_count|default:0 }})
+                </td>
+                <td class="text-end">
+                  <a class="btn btn-sm btn-outline-info"
+                     href="{% url 'events:event_detail' e.id %}">
+                    Details
+                  </a>
+                  <a class="btn btn-sm btn-outline-secondary"
+                     href="{% url 'events:organizer_event_feedback' e.id %}">
+                    View Feedback
+                  </a>
+                  {% if e.status != "approved" and e.status != "full" %}
+                    <a class="btn btn-sm btn-outline-primary"
+                       href="{% url 'events:event_update' e.id %}">
+                      Edit
+                    </a>
+                    <form class="d-inline" method="post"
+                          action="{% url 'events:event_delete' e.id %}">
+                      {% csrf_token %}
+                      <button class="btn btn-sm btn-outline-danger">
+                        Delete
+                      </button>
+                    </form>
+                  {% else %}
+                    <span class="text-muted small">Locked</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   {% else %}
     <div class="alert alert-info">You haven’t created any events yet.</div>

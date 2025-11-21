@@ -1,25 +1,29 @@
 {% extends "events/dashboard_base.html" %}
 
 {% block sidebar %}
-  <h6 class="text-uppercase text-white-50 mb-3">Admin</h6>
-  <ul class="nav flex-column gap-2">
+  <h6 class="text-uppercase mb-3 dashboard-sidebar-title text-dark">Admin</h6>
+  <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_dashboard' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'events:admin_dashboard' %}">
+        <i class="bi bi-house-door"></i>
         Dashboard
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_review' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_review' %}active{% endif %}" href="{% url 'events:admin_review' %}">
+        <i class="bi bi-ui-checks-grid"></i>
         Review submissions
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_feedback_overview' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_feedback_overview' %}active{% endif %}" href="{% url 'events:admin_feedback_overview' %}">
+        <i class="bi bi-calendar-event"></i>
         All events
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_user_management' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_user_management' %}active{% endif %}" href="{% url 'events:admin_user_management' %}">
+        <i class="bi bi-people"></i>
         User management
       </a>
     </li>
@@ -27,70 +31,77 @@
 {% endblock %}
 
 {% block main_content %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5>User Management</h5>
-  </div>
-
-    <form method="get" action="." class="row g-2 mb-3">
-    <div class="col-sm-3">
-      <select name="role" class="form-select">
-        <option value="">All Roles</option>
-        <option value="attendee"  {% if role_filter == "attendee" %}selected{% endif %}>Attendee</option>
-        <option value="organizer" {% if role_filter == "organizer" %}selected{% endif %}>Organizer</option>
-        <option value="admin"     {% if role_filter == "admin" %}selected{% endif %}>Admin</option>
-      </select>
+    <div class="dashboard-banner mb-4">
+      <h5 class="fw-bold fs-3 text-white mb-1">User Management</h5>
+      <p class="text-white-50 small mb-0">View, filter, and manage all users in the system.</p>
     </div>
-    <div class="col-sm-4">
-      <input type="text"
-             name="q"
-             class="form-control"
-             placeholder="Search username, name or email…"
-             value="{{ q }}">
+    <div class="card panel-card mb-3 p-3">
+      <form method="get" action="." class="row g-2">
+      <div class="col-sm-2">
+        <select name="role" class="form-select">
+          <option value="">All Roles</option>
+          <option value="attendee"  {% if role_filter == "attendee" %}selected{% endif %}>Attendee</option>
+          <option value="organizer" {% if role_filter == "organizer" %}selected{% endif %}>Organizer</option>
+          <option value="admin"     {% if role_filter == "admin" %}selected{% endif %}>Admin</option>
+        </select>
+      </div>
+      <div class="col-sm-9">
+        <input type="text"
+              name="q"
+              class="form-control"
+              placeholder="Search username, name or email…"
+              value="{{ q }}">
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-primary bg-grad mt-3 mt-sm-0">
+          <i class="bi bi-funnel me-1"></i>
+          Filter
+        </button>
+      </div>
+      </form>
     </div>
-    <div class="col-auto">
-      <button class="btn btn-outline-primary">Filter</button>
-    </div>
-  </form>
 
   {% if users %}
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th class="text-end">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for u in users %}
+    <div class="table-card-wrapper panel-card p-3 mb-3">
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
             <tr>
-              <td>{{ u.username }}</td>
-              <td>{{ u.get_full_name|default:"—" }}</td>
-              <td>{{ u.email|default:"—" }}</td>
-              <td>
-                {% if u.profile %}
-                  {{ u.profile.role|title }}
-                {% else %}
-                  —
-                {% endif %}
-              </td>
-              <td class="text-end">
-                <a class="btn btn-sm btn-outline-primary"
-                  href="{% url 'accounts:admin_user_edit' u.id %}">
-                  Edit
-                </a>
-                <a class="btn btn-sm btn-outline-danger"
-                  href="{% url 'accounts:admin_user_delete' u.id %}">
-                  Delete
-                </a>
-              </td>
+              <th>Username</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th class="text-end">Actions</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {% for u in users %}
+              <tr>
+                <td>{{ u.username }}</td>
+                <td>{{ u.get_full_name|default:"—" }}</td>
+                <td>{{ u.email|default:"—" }}</td>
+                <td>
+                  {% if u.profile %}
+                    {{ u.profile.role|title }}
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  <a class="btn btn-sm btn-outline-primary"
+                    href="{% url 'accounts:admin_user_edit' u.id %}">
+                    Edit
+                  </a>
+                  <a class="btn btn-sm btn-outline-danger"
+                    href="{% url 'accounts:admin_user_delete' u.id %}">
+                    Delete
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   {% else %}
     <div class="alert alert-info">No users found.</div>
