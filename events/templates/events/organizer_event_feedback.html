@@ -48,7 +48,7 @@
             <div class="mt-1">{{ f.comment }}</div>
           {% endif %}
           <div class="small text-muted mt-1">
-            {{ f.created_at|date:"M d, Y H:i" }}
+            <i class="bi bi-calendar"></i> {{ f.created_at|date:"M d, Y H:i" }}
           </div>
           <div> <i class="bi bi-clock"></i> {{ e.start_time|time:"H:i" }} - {{ e.end_time|time:"H:i" }}</div>
           {% if e.location %}
