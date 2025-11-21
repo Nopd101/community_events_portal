@@ -153,12 +153,19 @@
                     <form class="d-inline" method="post"
                           action="{% url 'events:event_delete' e.id %}">
                       {% csrf_token %}
+
                       <button class="btn btn-sm btn-outline-danger">
                         Delete
                       </button>
                     </form>
                   {% else %}
-                    <span class="text-muted small">Locked</span>
+                      <button class="btn btn-sm btn-outline-primary"
+                      disabled>
+                      Edit
+                      </button>
+                    <button class="btn btn-sm btn-outline-danger" disabled>
+                        Delete
+                      </button>
                   {% endif %}
                 </td>
               </tr>
