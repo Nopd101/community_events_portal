@@ -92,7 +92,7 @@
   {% if my_events %}
     <div class="table-card-wrapper panel-card p-3 mb-3">
       <div class="table-responsive">
-        <table class="table align-middle">
+        <table class="table align-middle text-center mb-0">
           <thead>
             <tr>
               <th style="width:5rem;">Image</th>
@@ -119,8 +119,8 @@
                 </td>
                 <td>{{ e.title }}</td>
                 <td>{{ e.date|date:"M d, Y" }}</td>
-                <td>{{ e.start_time|time:"H:i" }}</td>
-                <td>{{ e.end_time|time:"H:i" }}</td>
+                <td>  {{ e.start_time|time:"H:i" }}</td>
+                <td>  {{ e.end_time|time:"H:i" }}</td>
                 <td>
                   {% if e.capacity %}
                     {{ e.participants.count }}/{{ e.capacity.max_participants }}

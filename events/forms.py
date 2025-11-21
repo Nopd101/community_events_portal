@@ -14,7 +14,7 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ["image", "title", "short_description", "date","start_time", "end_time", "location","max_participants" ]
         widgets = {
-            "image": forms.ClearableFileInput(attrs={
+            "image": forms.FileInput(attrs={
                 "class": "form-control",
             }),
             "title": forms.TextInput(attrs={

@@ -121,9 +121,41 @@ def attendee_join_event(request, event_id):
     if not allow(request, {"attendee"}):
         return redirect("route_after_login")
 
+    # Only allow joining approved events
     event = get_object_or_404(Event, pk=event_id, status="approved")
-    Participation.objects.get_or_create(user=request.user, event=event)
-    messages.success(request, "You joined this event.")
+
+    # Ensure capacity exists
+    capacity, created = EventCapacity.objects.get_or_create(
+        event=event,
+        defaults={
+            "max_participants": 1,  # or some sensible default
+            "current_participants": event.participants.count(),
+        },
+    )
+
+    # 🔹 Use LIVE count instead of cached current_participants
+    current_count = event.participants.count()
+
+    # Check if full
+    if current_count >= capacity.max_participants:
+        messages.error(request, "This event is already full.")
+        return redirect("events:attendee_events")
+
+    # Prevent double-joining
+    participation, created = Participation.objects.get_or_create(
+        user=request.user,
+        event=event,
+    )
+
+    if not created:
+        messages.info(request, "You have already joined this event.")
+        return redirect("events:attendee_events")
+
+    # 🔹 Recalculate and sync cached current_participants
+    capacity.current_participants = event.participants.count()
+    capacity.save()
+
+    messages.success(request, "You successfully joined this event.")
     return redirect("events:attendee_events")
 
 
@@ -133,13 +165,19 @@ def attendee_leave_event(request, event_id):
     if not allow(request, {"attendee"}):
         return redirect("route_after_login")
 
+    # Only approved events can be left
     event = get_object_or_404(Event, pk=event_id, status="approved")
-    participation = Participation.objects.filter(user=request.user, event=event).first()
+
+    participation = Participation.objects.filter(
+        user=request.user,
+        event=event,
+    ).first()
 
     if not participation:
         messages.error(request, "You are not registered for this event.")
         return redirect("events:attendee_my_events")
 
+    # Enforce 7-day rule
     if event.date:
         days_diff = (event.date - date.today()).days
         if days_diff < 7:
@@ -149,11 +187,31 @@ def attendee_leave_event(request, event_id):
             )
             return redirect("events:attendee_my_events")
 
-    if request.method == "POST":
-        participation.delete()
-        messages.success(request, "You have been unregistered from this event.")
+    # We expect POST from your template form
+    if request.method != "POST":
+        # Just redirect if someone hits the URL directly via GET
         return redirect("events:attendee_my_events")
 
+    # Delete the participation
+    participation.delete()
+
+    # Update capacity if it exists
+    try:
+        capacity = event.capacity
+    except EventCapacity.DoesNotExist:
+        capacity = None
+
+    if capacity:
+        # sync cached count with real participants
+        capacity.current_participants = event.participants.count()
+        capacity.save()
+
+        # if event was full and now has space, reopen it
+        if event.status == "full" and capacity.current_participants < capacity.max_participants:
+            event.status = "approved"
+            event.save(update_fields=["status"])
+
+    messages.success(request, "You have been unregistered from this event.")
     return redirect("events:attendee_my_events")
 
 
