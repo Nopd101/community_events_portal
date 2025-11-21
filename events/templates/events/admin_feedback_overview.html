@@ -64,8 +64,8 @@
     <div class="event-row-cards">
       {% for e in events %}
       <div class="event-row-card panel-card p-3">
-        {% if submission.image %}
-            <img src="{{ submission.image.url }}" alt="Event image">
+        {% if e.image %}
+            <img src="{{ e.image.url }}" alt="Event image">
         {% else %}
             <img src="/static/default.jpg" alt="No image available">
         {% endif %}
@@ -73,7 +73,6 @@
           <div class="fw-semibold">{{ e.title }}</div>
           <div class="text-muted small mb-2">{{ e.date|date:"M d, Y" }}</div>
           <div>{{ e.start_time|time:"H:i" }} - {{ e.end_time|time:"H:i" }}</div>
-          <div>{{ e.end_time|time:"H:i" }}</div>
           <div class="small mb-1">
             <strong>Organizer:</strong> 
             {{ e.organizer.get_full_name|default:e.organizer.username }}
