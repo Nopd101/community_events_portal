@@ -1,0 +1,111 @@
+.back-link i {
+    font-size: 1rem;
+}
+
+.event-detail-hero {
+    overflow: hidden;
+    padding: 0;
+    box-shadow: none !important;
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.event-hero-image-wrapper {
+    position: relative;
+    height: 22rem;
+    overflow: hidden;
+}
+
+.event-hero-image {
+    border-radius: 1.75rem;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.event-hero-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f9f5ff, #ffe4f3, #ffedd5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.event-hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent 45%);
+}
+
+.event-hero-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: #fff;
+}
+
+.text-white-75 {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.hero-badge {
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.hero-badge-approved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.hero-badge-category {
+    background: #f3e8ff;
+    color: #7c3aed;
+}
+
+.event-side-card {
+    border-radius: 1.25rem;
+}
+
+.event-capacity-progress {
+    height: 0.6rem;
+    border-radius: 999px;
+    background-color: #e5e7eb;
+}
+
+.event-capacity-progress .progress-bar {
+    background: #000;
+    border-radius: 999px;
+}
+
+.text-grad {
+    background: linear-gradient(150deg, #f97316, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.organizer-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    background: linear-gradient(150deg, #f97316, #ec4899, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.4rem;
+}
+
+.event-participant-item {
+    background: transparent !important;
+    border: none !important;
+    padding-left: 0;
+    padding-right: 0;
+}

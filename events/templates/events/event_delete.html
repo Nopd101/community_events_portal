@@ -32,7 +32,7 @@
 {% block main_content %}
   <h5>Delete "{{ object }}"?</h5>
   <form method="post">{% csrf_token %}
-    <button class="btn btn-danger">Yes, delete</button>
+    <button class="btn btn-danger bg-grad">Yes, delete</button>
     <a href="{% url 'events:organizer_events' %}" class="btn btn-secondary">Cancel</a>
   </form>
 {% endblock %}

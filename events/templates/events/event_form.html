@@ -3,17 +3,17 @@
   <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
     <li class="nav-item">
       <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_dashboard' %}active{% endif %}" href="{% url 'events:organizer_dashboard' %}">
-        Dashboard
+        <i class="bi bi-house-door"></i>Dashboard
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_events' %}active{% endif %}" href="{% url 'events:organizer_events' %}">
-        My events
+        <i class="bi bi-calendar-event"></i>My events
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'event_create' %}active{% endif %}" href="{% url 'events:event_create' %}">
-        Create event
+        <i class="bi bi-plus-circle"></i>Create event
       </a>
     </li>
     <li class="nav-item mt-3">
@@ -21,7 +21,7 @@
     </li>
     <li class="nav-item">
       <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_profile' %}active{% endif %}" href="{% url 'events:organizer_profile' %}">
-        Edit profile
+        <i class="bi bi-people"></i>Edit profile
       </a>
     </li>
   </ul>

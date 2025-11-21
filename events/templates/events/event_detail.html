@@ -7,7 +7,8 @@
       <li class="nav-item">
         <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}"
           href="{% url 'events:admin_dashboard' %}">
-          <i class="bi bi-house-door"></i> Dashboard
+          <i class="bi bi-house-door"></i> 
+          Dashboard
         </a>
       </li>
 
@@ -36,39 +37,39 @@
 
   {% elif request.user.profile.role == 'organizer' %}
     <h6 class="text-uppercase mb-3 dashboard-sidebar-title text-dark">Organizer</h6>
-  <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
-    <li class="nav-item">
-      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_dashboard' %}active{% endif %}" href="{% url 'events:organizer_dashboard' %}">
-        Dashboard
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_events' %}active{% endif %}" href="{% url 'events:organizer_events' %}">
-        My events
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'event_create' %}active{% endif %}" href="{% url 'events:event_create' %}">
-        Create event
-      </a>
-    </li>
-    <li class="nav-item mt-3">
-      <span class="nav-link text-dark p-0 ">Profile</span>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_profile' %}active{% endif %}" href="{% url 'events:organizer_profile' %}">
-        Edit profile
-      </a>
-    </li>
-  </ul>
+    <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_dashboard' %}active{% endif %}" href="{% url 'events:organizer_dashboard' %}">
+          <i class="bi bi-house-door"></i>Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_events' %}active{% endif %}" href="{% url 'events:organizer_events' %}">
+          <i class="bi bi-calendar-event"></i>My events
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'event_create' %}active{% endif %}" href="{% url 'events:event_create' %}">
+          <i class="bi bi-plus-circle"></i>Create event
+        </a>
+      </li>
+      <li class="nav-item mt-3">
+        <span class="nav-link text-dark p-0 ">Profile</span>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'organizer_profile' %}active{% endif %}" href="{% url 'events:organizer_profile' %}">
+          <i class="bi bi-people"></i>Edit profile
+        </a>
+      </li>
+    </ul>
 
   {% elif request.user.profile.role == 'attendee' %}
     <h6 class="text-uppercase mb-3 dashboard-sidebar-title text-dark">Attendee</h6>
     <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
-
       <li class="nav-item">
         <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_events' %}active{% endif %}"
           href="{% url 'events:attendee_events' %}">
+          <i class="bi bi-house-door"></i>
           All events
         </a>
       </li>
@@ -76,87 +77,179 @@
       <li class="nav-item">
         <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_my_events' %}active{% endif %}"
           href="{% url 'events:attendee_my_events' %}">
+          <i class="bi bi-calendar-event"></i>
           My registered events
         </a>
       </li>
 
       <li class="nav-item mt-3">
-        <span class="nav-link text-dark p-0">Profile</span>
+        <span class="nav-link text-dark p-0 ">Profile</span>
       </li>
 
       <li class="nav-item">
         <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_profile' %}active{% endif %}"
           href="{% url 'events:attendee_profile' %}">
-          Edit profile
+          <i class="bi bi-people"></i>Edit profile
         </a>
       </li>
-
     </ul>
   {% endif %}
 
 {% endblock %}
-
 {% block main_content %}
-<div class="event-detail-card p-4">
-  {% if event.image %}
-    <img src="{{ event.image.url }}"
-          style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
-  {% else %}
-    <span class="text-muted small">No image</span>
-  {% endif %}
 
-  <h3 class="fw-bold mb-1">{{ event.title }}</h3>
-  
-  <div class="text-muted small mb-3">
-    {{ event.date|date:"M d, Y" }} • {{ event.location }}
-  </div>
-  <div> <i class="bi bi-clock"></i> {{ e.start_time|time:"H:i" }} - {{ e.end_time|time:"H:i" }}</div>
-  {% if e.location %}
-    <div class="small mb-1">
-      <i class="bi bi-geo-alt me-1"></i>{{ e.location }}
+<a href="javascript:history.back()"
+   class="back-link d-inline-flex align-items-center mb-3 text-dark text-decoration-none">
+  <i class="bi bi-arrow-left me-1"></i>
+  Back to Events
+</a>
+
+<div class="row g-4">
+
+  <div class="col-lg-8">
+    <div class="d-flex flex-column gap-3">
+
+      <div class="panel-card p-0 event-hero-wrapper">
+        <div class="event-hero-image-wrapper">
+          {% if event.image %}
+            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="event-hero-image">
+          {% else %}
+            <div class="event-hero-placeholder">
+              <span>No image</span>
+            </div>
+          {% endif %}
+          <div class="event-hero-gradient">
+            <div class="event-hero-text p-4">
+         
+              {% if event.status %}
+                <span class="badge hero-badge hero-badge-approved text-uppercase me-2">
+                  {{ event.status }}
+                </span>
+              {% endif %}
+              {% if event.category %}
+                <span class="badge hero-badge hero-badge-category">
+                  {{ event.category }}
+                </span>
+              {% endif %}
+
+              <h2 class="fw-bold text-white mt-3 mb-1">{{ event.title }}</h2>
+              {% if event.organizer %}
+                <div class="text-white-50 mb-2">
+                  by {{ event.organizer.get_full_name|default:event.organizer.username }}
+                </div>
+              {% endif %}
+          </div>  
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card p-4">
+        <h5 class="mb-3 text-grad fw-semibold">About This Event</h5>
+
+        <h3 class="fw-bold mb-1">{{ event.title }}</h3>
+
+        <p class="mb-1">{{ event.short_description }}</p>
+
+        <div class="small mb-2">
+          <i class="bi bi-calendar-event me-1"></i>
+          {{ event.date|date:"M d, Y" }}
+        </div>
+
+        <div class="small mb-2">
+          <i class="bi bi-clock me-1"></i>
+          {{ event.start_time|time:"H:i" }} – {{ event.end_time|time:"H:i" }}
+        </div>
+
+        {% if event.location %}
+          <div class="small mb-3">
+            <i class="bi bi-geo-alt me-1"></i>
+            {{ event.location }}
+          </div>
+        {% endif %}
+
+      </div>
+
     </div>
-  {% endif %}
 
-  <p class="mb-4">{{ event.short_description }}</p>
+    {% if request.user.is_superuser or request.user.profile.role == 'organizer' %}
+      <div class="panel-card p-4 mt-3">
+        <h5 class="fw-semibold mb-3">Participants ({{ participants|length }})</h5>
+        {% if participants %}
+          <ul class="list-group list-group-flush">
+            {% for p in participants %}
+              <li class="list-group-item event-participant-item">
+                <strong>{{ p.user.get_full_name|default:p.user.username }}</strong>
+                <span class="text-muted small">
+                  – joined {{ p.joined_at|date:"M d, Y H:i" }}
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted mt-2 mb-0">No participants yet.</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
 
-  {# Attendee Buttons #}
-  {% if request.user.profile.role == 'attendee' %}
-    <div class="d-flex gap-2 mb-4">
+  <div class="col-lg-4 d-flex flex-column gap-3">
+
+    <div class="panel-card p-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="fw-semibold">Capacity</span>
+        <span class="text-grad fw-semibold small">
+          {{ capacity_percent|default:"0" }}%
+        </span>
+      </div>
+
+      <div class="progress event-capacity-progress mb-1">
+        <div class="progress-bar"
+             role="progressbar"
+             style="width: {{ capacity_percent|default:0 }}%;"
+             aria-valuenow="{{ capacity_percent|default:0 }}"
+             aria-valuemin="0"
+             aria-valuemax="100">
+        </div>
+      </div>
+
+      <div class="small text-muted">
+        {% if event.capacity %}
+          {{ participants|length }} / {{ event.capacity.max_participants }} registered
+        {% else %}
+          {{ participants|length }} registered
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="panel-card p-3 d-flex align-items-center gap-3">
+      <div class="organizer-avatar">
+        <i class="bi bi-person-fill"></i>
+      </div>
+      <div>
+        <div class="fw-semibold">Organized By</div>
+        {% if event.organizer %}
+          <div class="mt-1">
+            <div>{{ event.organizer.get_full_name|default:event.organizer.username }}</div>
+            <div class="text-muted small">Event Organizer</div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% if request.user.profile.role == 'attendee' %}
       {% if joined %}
-        <a class="btn btn-primary btn-sm px-3"
+        <a class="btn btn-light w-100 border"
            href="{% url 'events:feedback_create' event.id %}">
           Give Feedback
         </a>
       {% else %}
-        <a class="btn btn-outline-secondary btn-sm px-3"
+        <a class="btn bg-grad text-white w-100"
            href="{% url 'events:attendee_join_event' event.id %}">
           Join Event
         </a>
       {% endif %}
-    </div>
-  {% endif %}
-
-  {# Organizer / Admin Participant List #}
-  {% if request.user.is_superuser or request.user.profile.role == 'organizer' %}
-    <hr class="my-4">
-
-    <h5 class="fw-semibold mb-3">Participants ({{ participants|length }})</h5>
-
-    {% if participants %}
-      <ul class="list-group list-group-flush">
-        {% for p in participants %}
-          <li class="list-group-item event-participant-item">
-            <strong>{{ p.user.get_full_name|default:p.user.username }}</strong>
-            <span class="text-muted small">
-              – joined {{ p.joined_at|date:"M d, Y H:i" }}
-            </span>
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p class="text-muted mt-2">No participants yet.</p>
     {% endif %}
-  {% endif %}
+  </div>
 
 </div>
+
 {% endblock %}

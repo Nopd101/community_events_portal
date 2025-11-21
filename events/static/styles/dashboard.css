@@ -189,8 +189,20 @@ ul.list-group.panel-list > li.list-group-item {
   border: none !important;
 }
 .sidebar-panel{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 16rem;
+  height: 100vh;             
+  overflow-y: auto;
   background: linear-gradient(90deg, #f9f5ff, #ffe4f3, #fff3e6);
   border-right: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.main-shell {
+  margin-left: 16rem;      
+  min-height: 100vh;
+  background: transparent;   
 }
 .bg-grad{
   background: linear-gradient(150deg, #f97316, #ec4899, #8b5cf6) !important;
@@ -203,7 +215,6 @@ ul.list-group.panel-list > li.list-group-item {
   gap: 1.5rem;
   width: 100%;
 }
-/* Make it responsive */
 @media (max-width: 992px) {
   .event-row-cards {
     grid-template-columns: repeat(2, 1fr);

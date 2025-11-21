@@ -1,16 +1,15 @@
 {% extends "base.html" %} {% block content %}
 <div class="d-flex" style="min-height: 100vh">
   <nav
-    class="sidebar-panel text-white p-3 d-flex flex-column justify-content-between"
-    style="width: 240px"
-  >
+    class="sidebar-panel text-white p-3 d-flex flex-column justify-content-between">
     <div>{% block sidebar %} {% endblock %}</div>
 
     <div class="mt-4">
       <hr class="border-secondary" />
       <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-light w-100">
+        <button type="submit" class="btn btn-outline-light w-100 bg-grad gap-2 d-flex align-items-center justify-content-center">
+          <i class="bi bi-box-arrow-left"></i>
           Logout
         </button>
       </form>

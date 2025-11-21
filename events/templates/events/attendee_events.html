@@ -5,6 +5,7 @@
     <li class="nav-item">
       <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_events' %}active{% endif %}"
         href="{% url 'events:attendee_events' %}">
+        <i class="bi bi-house-door"></i>
         All events
       </a>
     </li>
@@ -12,6 +13,7 @@
     <li class="nav-item">
       <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_my_events' %}active{% endif %}"
         href="{% url 'events:attendee_my_events' %}">
+        <i class="bi bi-calendar-event"></i>
         My registered events
       </a>
     </li>
@@ -23,7 +25,7 @@
     <li class="nav-item">
       <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_profile' %}active{% endif %}"
         href="{% url 'events:attendee_profile' %}">
-        Edit profile
+        <i class="bi bi-people"></i>Edit profile
       </a>
     </li>
   </ul>
