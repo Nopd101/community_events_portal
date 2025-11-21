@@ -129,9 +129,21 @@
                   {% endif %}
                 </td>
                 <td>
-                  <span class="badge bg-secondary text-uppercase">
-                    {{ e.status }}
-                  </span>
+                  {% if e.status == "approved" %}
+                    <span class="badge status-badge status-approved">Approved</span>
+
+                  {% elif e.status == "pending" %}
+                    <span class="badge status-badge status-pending">Pending</span>
+
+                  {% elif e.status == "declined" %}
+                    <span class="badge status-badge status-declined">Declined</span>
+
+                  {% elif e.status == "full" %}
+                    <span class="badge status-badge status-full">Full</span>
+
+                  {% else %}
+                    <span class="badge status-badge status-default">{{ e.status }}</span>
+                  {% endif %}
                 </td>
                 <td>
                   ⭐ {{ e.avg_rating|default:"-" }}/5 ({{ e.fb_count|default:0 }})

@@ -322,3 +322,42 @@ ul.list-group.panel-list > li.list-group-item {
   object-fit: cover;
   display: block;
 }
+
+.status-badge {
+  border-radius: 0.8rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: none;
+}
+
+.status-approved {
+  background: #16a34a20;
+  color: #15803d;
+  border: 1px solid #16a34a50;
+}
+
+.status-pending {
+  background: #facc1520;
+  color: #ca8a04;
+  border: 1px solid #facc1550;
+}
+
+.status-declined {
+  background: #fda4a420;
+  color: #dc2626;
+  border: 1px solid #fda4a450;
+}
+
+.status-full {
+  background: #c084fc20;
+  color: #9333ea;
+  border: 1px solid #c084fc50;
+}
+
+.status-default {
+  background: #e5e7eb;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
