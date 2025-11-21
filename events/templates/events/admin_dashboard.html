@@ -1,25 +1,25 @@
 {% extends "events/dashboard_base.html" %}
 
 {% block sidebar %}
-  <h6 class="text-uppercase text-white-50 mb-3">Admin</h6>
-  <ul class="nav flex-column gap-2">
+  <h6 class="text-uppercase mb-3 dashboard-sidebar-title">Admin</h6>
+  <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
     <li class="nav-item">
       <a class="nav-link text-white p-0" href="{% url 'events:admin_dashboard' %}">
         Dashboard
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_review' %}">
+      <a class="nav-link sidebar-pill-link" href="{% url 'events:admin_review' %}">
         Review submissions
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_feedback_overview' %}">
+      <a class="nav-link sidebar-pill-link" href="{% url 'events:admin_feedback_overview' %}">
         All events
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_user_management' %}">
+      <a class="nav-link sidebar-pill-link" href="{% url 'events:admin_user_management' %}">
         User management
       </a>
     </li>
@@ -27,70 +27,70 @@
 {% endblock %}
 
 {% block main_content %}
-  <h5 class="mb-3">Admin Dashboard</h5>
+  <h5 class="mb-3 dashboard-title">Admin Dashboard</h5>
 
   <div class="row g-3 mb-3">
     <div class="col-md-3">
-      <div class="card p-3">
-        <div class="small text-muted">Total events</div>
-        <div class="h4 mb-0">{{ total_events }}</div>
+      <div class="card p-3 stat-card stat-card-green">
+        <div class="stat-label">Upcoming events</div>
+        <div class="stat-value value-green">{{ upcoming_events }}</div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card p-3">
-        <div class="small text-muted">Upcoming events</div>
-        <div class="h4 mb-0">{{ upcoming_events }}</div>
+      <div class="card p-3 stat-card stat-card-yellow">
+        <div class="stat-label">Pending</div>
+        <div class="stat-value value-yellow">{{ pending_events }}</div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card p-3">
-        <div class="small text-muted">Pending</div>
-        <div class="h4 mb-0">{{ pending_events }}</div>
+      <div class="card p-3 stat-card stat-card-pink">
+        <div class="stat-label">Declined</div>
+        <div class="stat-value value-red">{{ declined_events }}</div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card p-3">
-        <div class="small text-muted">Declined</div>
-        <div class="h4 mb-0">{{ declined_events }}</div>
+      <div class="card p-3 stat-card">
+        <div class="stat-label">Total events</div>
+        <div class="stat-value value-purple">{{ total_events }}</div>
       </div>
     </div>
   </div>
 
   <div class="row g-3 mb-3">
     <div class="col-md-3">
-      <div class="card p-3">
-        <div class="small text-muted">Total users</div>
-        <div class="h4 mb-0">{{ total_users }}</div>
+      <div class="card p-3 stat-card stat-card-purple">
+        <div class="stat-label">Attendees</div>
+        <div class="stat-value value-purple">{{ attendees }}</div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card p-3">
-        <div class="small text-muted">Attendees</div>
-        <div class="h4 mb-0">{{ attendees }}</div>
+      <div class="card p-3 stat-card stat-card-blue">
+        <div class="stat-label">Organizers</div>
+        <div class="stat-value value-purple">{{ organizers }}</div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card p-3">
-        <div class="small text-muted">Organizers</div>
-        <div class="h4 mb-0">{{ organizers }}</div>
+      <div class="card p-3 stat-card stat-card-orange">
+        <div class="stat-label">Admins</div>
+        <div class="stat-value value-purple">{{ admins }}</div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card p-3">
-        <div class="small text-muted">Admins</div>
-        <div class="h4 mb-0">{{ admins }}</div>
+      <div class="card p-3 stat-card">
+        <div class="stat-label">Total users</div>
+        <div class="stat-value value-purple">{{ total_users }}</div>
       </div>
     </div>
   </div>
 
   <div class="row g-3">
     <div class="col-md-6">
-      <div class="card p-3 h-100">
-        <h6>Events in the next 7 days</h6>
+      <div class="card p-3 h-100 panel-card">
+        <h6 class="panel-title">Events in the next 7 days</h6>
         {% if events_next_week %}
-          <ul class="list-group list-group-flush mt-2">
+          <ul class="list-group list-group-flush mt-2 panel-list">
             {% for e in events_next_week %}
-              <li class="list-group-item px-0">
+              <li class="list-group-item px-0 panel-list-item">
                 <strong>{{ e.title }}</strong>
                 <span class="text-muted small">– {{ e.date|date:"M d, Y" }}</span>
               </li>
@@ -103,10 +103,10 @@
     </div>
 
     <div class="col-md-6">
-      <div class="card p-3 h-100">
-        <h6>Top rated events</h6>
+      <div class="card p-3 h-100 panel-card">
+        <h6 class="panel-title">Top rated events</h6>
         {% if top_events %}
-          <ul class="list-group list-group-flush mt-2">
+          <ul class="list-group list-group-flush mt-2 panel-list">
             {% for avg, count, e in top_events %}
               <li class="list-group-item px-0">
                 <strong>{{ e.title }}</strong>

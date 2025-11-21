@@ -17,12 +17,12 @@
     </div>
   </nav>
 
-  <div class="flex-grow-1 bg-white">
+  <div class="flex-grow-1 main-shell">
     <nav
       class="navbar navbar-light border-bottom px-4 py-2 d-flex justify-content-between align-items-center"
     >
       {% block topbar %}
-      <h5 class="mb-0">BIG-IN Events Portal</h5>
+      <h5 class="mb-0 portal-title">BIG-IN Events Portal</h5>
       <div>
         {{ request.user.username }}
         <span class="text-muted">({{ request.user.profile.role|title }})</span>
@@ -30,7 +30,7 @@
       {% endblock %}
     </nav>
 
-    <main class="p-4">{% block main_content %}{% endblock %}</main>
+    <main class="p-4 dashboard-page">{% block main_content %}{% endblock %}</main>
   </div>
 </div>
 {% endblock %}
