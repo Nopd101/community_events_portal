@@ -1,0 +1,41 @@
+
+.form-control:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 0 0.15rem rgba(168, 85, 247, 0.25);
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(255, 255, 255, 0.85);
+  outline: none;
+  font-size: 0.95rem;
+}
+.form-field select{
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='gray'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 0.15rem rgba(168, 85, 247, 0.25);
+}
+.form-field.checkbox-field {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important; 
+  justify-content: left !important;
+}
+#id_is_active {
+    margin-top: 0.4rem;
+    width: 1.2rem;
+    margin-left: 1rem;
+}

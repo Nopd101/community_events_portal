@@ -1,0 +1,73 @@
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f9f5ff, #ffe4f3, #ffedd5);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+}
+
+.auth-card {
+    border-radius: 1.5rem;
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 18px 45px rgba(148, 163, 184, 0.25);
+    max-width: 420px;
+    width: 100%;
+}
+
+.bg-grad {
+    background: linear-gradient(150deg, #f97316, #ec4899, #8b5cf6) !important;
+    border: none !important;
+}
+
+.bg-grad:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 12px 30px rgba(139, 92, 246, 0.45);
+}
+
+.auth-title {
+    font-weight: 700;
+}
+
+.auth-subtitle {
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.form-control:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 0 0.15rem rgba(168, 85, 247, 0.25);
+}
+
+.link-muted {
+    font-size: 0.9rem;
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(255, 255, 255, 0.85);
+  outline: none;
+  font-size: 0.95rem;
+}
+.form-field select{
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='gray'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 0.15rem rgba(168, 85, 247, 0.25);
+}
