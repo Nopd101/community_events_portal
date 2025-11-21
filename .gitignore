@@ -8,7 +8,6 @@ venv/
 
 # Django
 /static/
-/media/
 
 # OS
 .DS_Store
