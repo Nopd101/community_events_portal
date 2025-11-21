@@ -110,6 +110,12 @@
   <div class="text-muted small mb-3">
     {{ event.date|date:"M d, Y" }} • {{ event.location }}
   </div>
+  <div> <i class="bi bi-clock"></i> {{ e.start_time|time:"H:i" }} - {{ e.end_time|time:"H:i" }}</div>
+  {% if e.location %}
+    <div class="small mb-1">
+      <i class="bi bi-geo-alt me-1"></i>{{ e.location }}
+    </div>
+  {% endif %}
 
   <p class="mb-4">{{ event.short_description }}</p>
 
