@@ -1,6 +1,15 @@
 from django.db import models
 from django.conf import settings
+import uuid
+import os
 
+def event_image_upload_path(instance, filename):
+    # get file extension
+    ext = filename.split('.')[-1]
+    # create random filename (UUID)
+    new_filename = f"{uuid.uuid4().hex}.{ext}"
+    # put it in your events/images/ folder
+    return os.path.join("events", "images", new_filename)
 
 class Event(models.Model):
     STATUS_CHOICES = [
@@ -11,6 +20,8 @@ class Event(models.Model):
     ]
     title = models.CharField(max_length=200)
     date = models.DateField(null=True, blank=True)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
     location = models.CharField(max_length=200, blank=True)
     short_description = models.TextField(blank=True)
     organizer = models.ForeignKey(
@@ -20,6 +31,12 @@ class Event(models.Model):
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
 
+    image = models.ImageField(
+        upload_to=event_image_upload_path,
+        null=True,
+        blank=True,
+    )
+    
     def __str__(self):
         return self.title
 
@@ -52,3 +69,34 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f"{self.event.title} - {self.user.username} ({self.rating}★)"
+
+
+class EventCapacity(models.Model):
+    """
+    Stores capacity info for an event:
+    - max_participants: allowed max
+    - current_participants: cached current count
+    """
+    event = models.OneToOneField(
+        Event,
+        on_delete=models.CASCADE,
+        related_name="capacity",
+    )
+    max_participants = models.PositiveIntegerField()
+    current_participants = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.event.title} capacity ({self.current_participants}/{self.max_participants})"
+
+    @property
+    def is_full(self):
+        return self.current_participants >= self.max_participants
+
+    def refresh_current_participants(self):
+        """
+        Recalculate based on Participation records.
+        Call this if you want a fresh count from DB.
+        """
+        self.current_participants = self.event.participants.count()
+        self.save()
+

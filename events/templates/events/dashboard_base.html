@@ -24,7 +24,7 @@
       {% block topbar %}
       <h5 class="mb-0">BIG-IN Events Portal</h5>
       <div>
-        {{ request.user.username }}
+        {{ request.user.first_name }}
         <span class="text-muted">({{ request.user.profile.role|title }})</span>
       </div>
       {% endblock %}

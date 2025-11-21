@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
-from .models import Event, Participation, Feedback
+from .models import Event, Participation, Feedback, EventCapacity
 from .forms import EventForm, FeedbackForm
 from accounts.forms import UserProfileForm
 
@@ -230,15 +230,26 @@ def organizer_events(request):
     if not allow(request, {"organizer"}):
         return redirect("route_after_login")
 
+    # Read filters
     status = request.GET.get("status", "").strip()
     q = (request.GET.get("q") or "").strip()
+    date_from = request.GET.get("date_from", "").strip()
+    date_to = request.GET.get("date_to", "").strip()
 
+    # Base queryset
     my_events = Event.objects.filter(organizer=request.user)
+
+    # Apply filters
     if status:
         my_events = my_events.filter(status=status)
     if q:
         my_events = my_events.filter(title__icontains=q)
+    if date_from:
+        my_events = my_events.filter(date__gte=date_from)
+    if date_to:
+        my_events = my_events.filter(date__lte=date_to)
 
+    # Calculate feedback data (your existing logic)
     for e in my_events:
         feedbacks = Feedback.objects.filter(event=e)
         if feedbacks.exists():
@@ -249,10 +260,13 @@ def organizer_events(request):
             e.avg_rating = "-"
             e.fb_count = 0
 
+    # Render template with all filter values included
     return render(request, "events/organizer_events.html", {
         "my_events": my_events,
         "status": status,
         "q": q,
+        "date_from": date_from,   # <-- IMPORTANT
+        "date_to": date_to,       # <-- IMPORTANT
     })
 
 
@@ -262,12 +276,15 @@ def event_create(request):
         return redirect("route_after_login")
 
     if request.method == "POST":
-        form = EventForm(request.POST)
+        form = EventForm(request.POST, request.FILES)  # <-- add request.FILES here
         if form.is_valid():
             event = form.save(commit=False)
             event.organizer = request.user
             event.status = "pending"
             event.save()
+            
+            max_participants = form.cleaned_data["max_participants"]
+            EventCapacity.objects.create(event=event, max_participants=max_participants, current_participants=0)
             messages.success(request, "Event created and submitted for review.")
             return redirect("events:organizer_events")
         else:
@@ -290,15 +307,44 @@ def event_update(request, pk):
         return redirect("events:organizer_events")
 
     if request.method == "POST":
-        form = EventForm(request.POST, instance=event)
+        form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
-            form.save()
+            updated_event = form.save()
+
+            max_participants = form.cleaned_data["max_participants"]
+
+            # make sure capacity exists, create if missing
+            capacity, created = EventCapacity.objects.get_or_create(
+                event=updated_event,
+                defaults={
+                    "max_participants": max_participants,
+                    "current_participants": updated_event.participants.count(),
+                },
+            )
+            # even if it already existed, update it
+            capacity.max_participants = max_participants
+            capacity.save()
+
             messages.success(request, "Event updated.")
             return redirect("events:organizer_events")
         else:
             messages.error(request, "Please correct the errors below.")
     else:
-        form = EventForm(instance=event)
+        # ensure capacity exists for older events, with a sane default
+        capacity, created = EventCapacity.objects.get_or_create(
+            event=event,
+            defaults={
+                "max_participants": 1,
+                "current_participants": event.participants.count(),
+            },
+        )
+
+        form = EventForm(
+            instance=event,
+            initial={
+                "max_participants": capacity.max_participants,
+            },
+        )
 
     return render(request, "events/event_form.html", {
         "form": form,

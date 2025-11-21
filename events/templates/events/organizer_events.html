@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block main_content %}
-    <form method="get" action="." class="row g-2 mb-3">
+  <form method="get" action="." class="row g-2 mb-3">
     <div class="col-sm-3">
       <select name="status" class="form-select">
         <option value="">All statuses</option>
@@ -40,13 +40,39 @@
         <option value="full"     {% if status == 'full' %}selected{% endif %}>Full</option>
       </select>
     </div>
-    <div class="col-sm-4">
-      <input type="text"
-             name="q"
-             class="form-control"
-             placeholder="Search by title…"
-             value="{{ q }}">
+
+    <!-- Date from -->
+    <div class="col-sm-3">
+      <input
+        type="date"
+        name="date_from"
+        class="form-control"
+        placeholder="From date"
+        value="{{ date_from|default_if_none:'' }}"
+      >
     </div>
+
+    <!-- Date to -->
+    <div class="col-sm-3">
+      <input
+        type="date"
+        name="date_to"
+        class="form-control"
+        placeholder="To date"
+        value="{{ date_to|default_if_none:'' }}"
+      >
+    </div>
+
+    <div class="col-sm-3">
+      <input
+        type="text"
+        name="q"
+        class="form-control"
+        placeholder="Search by title…"
+        value="{{ q }}"
+      >
+    </div>
+
     <div class="col-auto">
       <button class="btn btn-primary">Filter</button>
     </div>
@@ -58,23 +84,60 @@
   {% if my_events %}
     <div class="table-responsive">
       <table class="table align-middle">
-        <thead><tr><th>Title</th><th>Date</th><th>Status</th><th>Rating</th><th class="text-end">Actions</th></tr></thead>
+        <thead>
+          <tr>
+            <th style="width:80px;">Image</th>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>Rating</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
         <tbody>
           {% for e in my_events %}
             <tr>
+              <td>
+                {% if e.image %}
+                  <img src="{{ e.image.url }}"
+                       style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+                {% else %}
+                  <span class="text-muted small">No image</span>
+                {% endif %}
+              </td>
               <td>{{ e.title }}</td>
               <td>{{ e.date|date:"M d, Y" }}</td>
+              <td>{{ e.start_time|time:"H:i" }}</td>
+              <td>{{ e.end_time|time:"H:i" }}</td>
+              <td>
+                {% if e.capacity %}
+                  {{ e.participants.count }}/{{ e.capacity.max_participants }}
+                {% else %}
+                  {{ e.participants.count }} / -
+                {% endif %}
+              </td>
               <td><span class="badge bg-secondary text-uppercase">{{ e.status }}</span></td>
               <td>⭐ {{ e.avg_rating|default:"-" }}/5 ({{ e.fb_count|default:0 }})</td>
               <td class="text-end">
                 <a class="btn btn-sm btn-outline-info"
-                  href="{% url 'events:event_detail' e.id %}">
+                   href="{% url 'events:event_detail' e.id %}">
                   Details
                 </a>
-                <a class="btn btn-sm btn-outline-secondary" href="{% url 'events:organizer_event_feedback' e.id %}">View Feedback</a>
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{% url 'events:organizer_event_feedback' e.id %}">
+                  View Feedback
+                </a>
                 {% if e.status != "approved" and e.status != "full" %}
-                  <a class="btn btn-sm btn-outline-primary" href="{% url 'events:event_update' e.id %}">Edit</a>
-                  <form class="d-inline" method="post" action="{% url 'events:event_delete' e.id %}">{% csrf_token %}
+                  <a class="btn btn-sm btn-outline-primary"
+                     href="{% url 'events:event_update' e.id %}">
+                    Edit
+                  </a>
+                  <form class="d-inline" method="post"
+                        action="{% url 'events:event_delete' e.id %}">
+                    {% csrf_token %}
                     <button class="btn btn-sm btn-outline-danger">Delete</button>
                   </form>
                 {% else %}
