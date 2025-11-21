@@ -1,25 +1,29 @@
 {% extends "events/dashboard_base.html" %}
 
 {% block sidebar %}
-  <h6 class="text-uppercase text-white-50 mb-3">Admin</h6>
-  <ul class="nav flex-column gap-2">
+  <h6 class="text-uppercase mb-3 dashboard-sidebar-title text-dark">Admin</h6>
+  <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_dashboard' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'events:admin_dashboard' %}">
+        <i class="bi bi-house-door"></i>
         Dashboard
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_review' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_review' %}active{% endif %}" href="{% url 'events:admin_review' %}">
+        <i class="bi bi-ui-checks-grid"></i>
         Review submissions
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_feedback_overview' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_feedback_overview' %}active{% endif %}" href="{% url 'events:admin_feedback_overview' %}">
+        <i class="bi bi-calendar-event"></i>
         All events
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:admin_user_management' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'admin_user_management' %}active{% endif %}" href="{% url 'events:admin_user_management' %}">
+        <i class="bi bi-people"></i>
         User management
       </a>
     </li>
@@ -27,21 +31,36 @@
 {% endblock %}
 
 {% block main_content %}
-  <h5 class="mb-3">Edit User: {{ user_obj.username }}</h5>
+  <div class="dashboard-banner mb-4">
+    <h5 class="fw-bold fs-3 text-white mb-1">Edit User: {{ user_obj.username }}</h5>
+    <p class="text-white-50 small mb-0">
+      Update user information and account status.
+    </p>
+  </div>
 
-  {% if form.non_field_errors %}
-    <div class="alert alert-danger">
-      {% for err in form.non_field_errors %}{{ err }}<br>{% endfor %}
-    </div>
-  {% endif %}
+  <div class="panel-card p-4">
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {% for err in form.non_field_errors %}{{ err }}<br>{% endfor %}
+      </div>
+    {% endif %}
 
-  <form method="post" novalidate>
-    {% csrf_token %}
-    {{ form.as_p }}
+    <form method="post" novalidate class="row g-3">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="col-md-6 form-field {% if field.field.widget.input_type == 'checkbox' %}checkbox-field{% endif %}">
+          <label class="form-label fw-semibold">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-danger small">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
 
-    <div class="d-flex gap-2 mt-3">
-      <button type="submit" class="btn btn-primary">Save changes</button>
-      <a href="{% url 'events:admin_user_management' %}" class="btn btn-secondary">Cancel</a>
-    </div>
-  </form>
+      <div class="col-12 d-flex gap-2 mt-3">
+        <button type="submit" class="btn bg-grad text-white px-4">Save changes</button>
+        <a href="{% url 'events:admin_user_management' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+      </div>
+    </form>
+  </div>
 {% endblock %}
