@@ -64,8 +64,11 @@
     <div class="event-row-cards">
       {% for e in events %}
       <div class="event-row-card panel-card p-3">
-        <img src="{{ e.image.url }}"
-                         style="width: 150px; height: 150px; object-fit: cover; border-radius: 5px;">
+        {% if submission.image %}
+            <img src="{{ submission.image.url }}" alt="Event image">
+        {% else %}
+            <img src="/static/default.jpg" alt="No image available">
+        {% endif %}
         <div class="event-card-content">
           <div class="fw-semibold">{{ e.title }}</div>
           <div class="text-muted small mb-2">{{ e.date|date:"M d, Y" }}</div>
