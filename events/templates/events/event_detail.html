@@ -1,50 +1,30 @@
-{% block sidebar %}
-  <h6 class="text-uppercase text-white-50 mb-3">Organizer</h6>
-  <ul class="nav flex-column gap-2">
-    <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:organizer_dashboard' %}">
-        Dashboard
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:organizer_events' %}">
-        My events
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:event_create' %}">
-        Create event
-      </a>
-    </li>
-    <li class="nav-item mt-3">
-      <span class="text-white-50 small">Profile</span>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:organizer_profile' %}">
-        Edit profile
-      </a>
-    </li>
-  </ul>
-{% endblock %}
+{% extends "events/dashboard_base.html" %}
 
 {% block main_content %}
-  <h4 class="mb-1">{{ event.title }}</h4>
-  <div class="text-muted small mb-2">
+<a href="javascript:history.back()" class="btn btn-light bg-grad text-white mb-3" 
+     style="border-radius: 1rem; padding: .45rem 1rem;">
+    ← Back
+  </a>
+<div class="event-detail-card p-4">
+
+  <h3 class="fw-bold mb-1">{{ event.title }}</h3>
+  
+  <div class="text-muted small mb-3">
     {{ event.date|date:"M d, Y" }} • {{ event.location }}
   </div>
 
-  <p class="mb-3">{{ event.short_description }}</p>
+  <p class="mb-4">{{ event.short_description }}</p>
 
-  {# Attendee actions: Join / Give feedback #}
+  {# Attendee Buttons #}
   {% if request.user.profile.role == 'attendee' %}
-    <div class="d-flex gap-2 mb-3">
+    <div class="d-flex gap-2 mb-4">
       {% if joined %}
-        <a class="btn btn-primary btn-sm"
+        <a class="btn btn-primary btn-sm px-3"
            href="{% url 'events:feedback_create' event.id %}">
           Give Feedback
         </a>
       {% else %}
-        <a class="btn btn-outline-secondary btn-sm"
+        <a class="btn btn-outline-secondary btn-sm px-3"
            href="{% url 'events:attendee_join_event' event.id %}">
           Join Event
         </a>
@@ -52,15 +32,17 @@
     </div>
   {% endif %}
 
+  {# Organizer / Admin Participant List #}
   {% if request.user.is_superuser or request.user.profile.role == 'organizer' %}
-    <hr>
-    <h5 class="mt-3">Participants ({{ participants|length }})</h5>
+    <hr class="my-4">
+
+    <h5 class="fw-semibold mb-3">Participants ({{ participants|length }})</h5>
 
     {% if participants %}
-      <ul class="list-group">
+      <ul class="list-group list-group-flush">
         {% for p in participants %}
-          <li class="list-group-item py-1">
-            {{ p.user.get_full_name|default:p.user.username }}
+          <li class="list-group-item event-participant-item">
+            <strong>{{ p.user.get_full_name|default:p.user.username }}</strong>
             <span class="text-muted small">
               – joined {{ p.joined_at|date:"M d, Y H:i" }}
             </span>
@@ -71,4 +53,6 @@
       <p class="text-muted mt-2">No participants yet.</p>
     {% endif %}
   {% endif %}
+
+</div>
 {% endblock %}

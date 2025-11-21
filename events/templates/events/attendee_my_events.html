@@ -1,23 +1,29 @@
 {% extends "events/dashboard_base.html" %}
 
 {% block sidebar %}
-  <h6 class="text-uppercase text-white-50 mb-3">Attendee</h6>
-  <ul class="nav flex-column gap-2">
+  <h6 class="text-uppercase mb-3 dashboard-sidebar-title text-dark">Attendee</h6>
+  <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:attendee_events' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_events' %}active{% endif %}"
+        href="{% url 'events:attendee_events' %}">
         All events
       </a>
     </li>
+
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:attendee_my_events' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_my_events' %}active{% endif %}"
+        href="{% url 'events:attendee_my_events' %}">
         My registered events
       </a>
     </li>
+
     <li class="nav-item mt-3">
-      <span class="text-white-50 small">Profile</span>
+      <span class="nav-link text-dark p-0 ">Profile</span>
     </li>
+
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:attendee_profile' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_profile' %}active{% endif %}"
+        href="{% url 'events:attendee_profile' %}">
         Edit profile
       </a>
     </li>
@@ -25,38 +31,51 @@
 {% endblock %}
 
 {% block main_content %}
-  <h5 class="mb-3">My Registered Events</h5>
+  <div class="dashboard-banner mb-4">
+    <h5 class="fw-bold fs-3 text-white">My Registered Events</h5>
+    <p class="mb-0 text-white-50 small">Events you are currently participating in.</p>
+  </div>
 
   {% if events %}
-    <div class="list-group">
+    <div class="event-row-cards">
       {% for e in events %}
-        <div class="list-group-item">
-          <div class="d-flex justify-content-between">
-            <strong>{{ e.title }}</strong>
-            <small class="text-muted">{{ e.date|date:"M d, Y" }}</small>
-          </div>
-          <div class="small text-muted">{{ e.location }}</div>
-          <div class="small mt-1">
-            ⭐ {{ e.avg_rating|default:"-" }}/5 ({{ e.fb_count|default:0 }} reviews)
-          </div>
+        <div class="event-row-card panel-card p-3">
+          <div class="event-card-content">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <div>
+                <div class="fw-semibold">{{ e.title }}</div>
+                <div class="text-muted small">
+                  {{ e.date|date:"M d, Y" }} • {{ e.location }}
+                </div>
+              </div>
+            </div>
 
-          <div class="mt-2 d-flex gap-2">
-            <a class="btn btn-sm btn-outline-info"
-               href="{% url 'events:event_detail' e.id %}">
-              Details
-            </a>
-            <a class="btn btn-sm btn-outline-primary"
-               href="{% url 'events:feedback_create' e.id %}">
-              Give Feedback
-            </a>
-            <form method="post"
-                  action="{% url 'events:attendee_leave_event' e.id %}"
-                  class="d-inline">
-              {% csrf_token %}
-              <button class="btn btn-sm btn-outline-danger">
-                Cancel registration
-              </button>
-            </form>
+            <div class="small mb-1">
+              ⭐ {{ e.avg_rating|default:"-" }}/5
+              <span class="text-muted">({{ e.fb_count|default:0 }} reviews)</span>
+            </div>
+
+            <div class="mt-3 d-flex flex-wrap gap-2">
+
+              <a class="btn btn-sm btn-outline-info rounded-pill"
+                 href="{% url 'events:event_detail' e.id %}">
+                Details
+              </a>
+
+              <a class="btn btn-sm btn-outline-primary rounded-pill"
+                 href="{% url 'events:feedback_create' e.id %}">
+                Give Feedback
+              </a>
+
+              <form method="post"
+                    action="{% url 'events:attendee_leave_event' e.id %}"
+                    class="d-inline">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-danger rounded-pill">
+                  Cancel registration
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       {% endfor %}

@@ -1,23 +1,29 @@
 {% extends "events/dashboard_base.html" %}
 
 {% block sidebar %}
-  <h6 class="text-uppercase text-white-50 mb-3">Attendee</h6>
-  <ul class="nav flex-column gap-2">
+  <h6 class="text-uppercase mb-3 dashboard-sidebar-title text-dark">Attendee</h6>
+  <ul class="nav flex-column gap-2 dashboard-sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:attendee_events' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_events' %}active{% endif %}"
+        href="{% url 'events:attendee_events' %}">
         All events
       </a>
     </li>
+
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:attendee_my_events' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_my_events' %}active{% endif %}"
+        href="{% url 'events:attendee_my_events' %}">
         My registered events
       </a>
     </li>
+
     <li class="nav-item mt-3">
-      <span class="text-white-50 small">Profile</span>
+      <span class="nav-link text-dark p-0 ">Profile</span>
     </li>
+
     <li class="nav-item">
-      <a class="nav-link text-white p-0" href="{% url 'events:attendee_profile' %}">
+      <a class="nav-link sidebar-pill-link {% if request.resolver_match.url_name == 'attendee_profile' %}active{% endif %}"
+        href="{% url 'events:attendee_profile' %}">
         Edit profile
       </a>
     </li>
@@ -25,7 +31,14 @@
 {% endblock %}
 
 {% block main_content %}
-  <h5>Feedback for: {{ event.title }}</h5>
+  <div class="dashboard-banner mb-4">
+    <h5 class="fw-bold fs-3 text-white mb-1">
+      Feedback for: {{ event.title }}
+    </h5>
+    <p class="text-white-50 small mb-0">
+      Share your experience to help improve future events.
+    </p>
+  </div>
 
   {% if form.non_field_errors %}
     <div class="alert alert-danger">
