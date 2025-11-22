@@ -144,12 +144,18 @@ Seeds essential initial data for the system.
   - Attendee  
 - Sets permissions  
 - Creates **6 initial users**  
-  - 2 Admins  
-  - 2 Organizers  
-  - 2 Attendees  
+  - **Admins**
+    - miyuki_ando / Miyuki123!  
+    - daryl_cruz / Daryl123!  
+  - **Organizers**
+    - luther_delacruz / Luther123!  
+    - jr_eleazar / JREleazar123!  
+  - **Attendees**
+    - miguel_eugenio / Miguel123!  
+    - john_doe / JohnDoe123!  
 - Creates **10 sample events**  
   - Each organizer receives 5 events  
-  - Each set includes **3 Approved** and **2 Pending**  
+  - Each set includes **3 Approved** and **2 Pending**
 
 ### Run:
 ```
