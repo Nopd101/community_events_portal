@@ -4,11 +4,8 @@ import uuid
 import os
 
 def event_image_upload_path(instance, filename):
-    # get file extension
     ext = filename.split('.')[-1]
-    # create random filename (UUID)
     new_filename = f"{uuid.uuid4().hex}.{ext}"
-    # put it in your events/images/ folder
     return os.path.join("events", "images", new_filename)
 
 class Event(models.Model):

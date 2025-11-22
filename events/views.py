@@ -288,16 +288,13 @@ def organizer_events(request):
     if not allow(request, {"organizer"}):
         return redirect("route_after_login")
 
-    # Read filters
     status = request.GET.get("status", "").strip()
     q = (request.GET.get("q") or "").strip()
     date_from = request.GET.get("date_from", "").strip()
     date_to = request.GET.get("date_to", "").strip()
 
-    # Base queryset
     my_events = Event.objects.filter(organizer=request.user)
 
-    # Apply filters
     if status:
         my_events = my_events.filter(status=status)
     if q:
@@ -307,7 +304,6 @@ def organizer_events(request):
     if date_to:
         my_events = my_events.filter(date__lte=date_to)
 
-    # Calculate feedback data (your existing logic)
     for e in my_events:
         feedbacks = Feedback.objects.filter(event=e)
         if feedbacks.exists():
@@ -318,13 +314,12 @@ def organizer_events(request):
             e.avg_rating = "-"
             e.fb_count = 0
 
-    # Render template with all filter values included
     return render(request, "events/organizer_events.html", {
         "my_events": my_events,
         "status": status,
         "q": q,
-        "date_from": date_from,   # <-- IMPORTANT
-        "date_to": date_to,       # <-- IMPORTANT
+        "date_from": date_from,
+        "date_to": date_to,
     })
 
 
@@ -334,7 +329,7 @@ def event_create(request):
         return redirect("route_after_login")
 
     if request.method == "POST":
-        form = EventForm(request.POST, request.FILES)  # <-- add request.FILES here
+        form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             event = form.save(commit=False)
             event.organizer = request.user
@@ -371,7 +366,6 @@ def event_update(request, pk):
 
             max_participants = form.cleaned_data["max_participants"]
 
-            # make sure capacity exists, create if missing
             capacity, created = EventCapacity.objects.get_or_create(
                 event=updated_event,
                 defaults={
@@ -379,7 +373,6 @@ def event_update(request, pk):
                     "current_participants": updated_event.participants.count(),
                 },
             )
-            # even if it already existed, update it
             capacity.max_participants = max_participants
             capacity.save()
 
@@ -388,7 +381,6 @@ def event_update(request, pk):
         else:
             messages.error(request, "Please correct the errors below.")
     else:
-        # ensure capacity exists for older events, with a sane default
         capacity, created = EventCapacity.objects.get_or_create(
             event=event,
             defaults={
