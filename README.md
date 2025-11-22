@@ -30,6 +30,12 @@ The system includes full CRUD operations, user management, feedback handling, an
 
 ## Features
 
+### **User Authentication**
+- Login using username and password  
+- Register an account (username, first name, last name, email, role, password, confirmation)  
+- Forgot Password functionality  
+- Role-based redirection after login (Admin, Organizer, Attendee)  
+
 ### **Admin**
 - Dashboard with platform statistics  
 - Approve or reject events  
@@ -47,8 +53,8 @@ The system includes full CRUD operations, user management, feedback handling, an
 - Browse and filter events  
 - Join events and manage joined list  
 - Submit feedback  
-- Update profile  
-
+- Update profile
+  
 ---
 
 ## Tech Stack
